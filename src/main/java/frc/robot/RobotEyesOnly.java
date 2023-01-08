@@ -6,12 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.motors.MotorFactory;
-import frc.robot.subsystems.ClimberSubsystem;
 
 /**
- * Implementation of a Robot that only has the climber subsystem, so we can develop
+ * Implementation of a Robot that only has the camera subsystem, so we can develop
  * and test independently.
  */
 public class RobotEyesOnly extends TimedRobot {

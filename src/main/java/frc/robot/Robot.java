@@ -15,10 +15,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.motors.MotorFactory;
-import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.util.Logger;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -31,7 +27,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class Robot extends TimedRobot {
 
   public static final int DRIVER_PORT = 0;
-  public static final int SPECIAL_OPS_PORT = 1;
+
   public static final int INTAKE_PORT = 9;
   public static final int SHOOTER_LAUNCH_PORT = 10;
   public static final int SHOOTER_INDEXER_PORT = 11;
@@ -59,10 +55,6 @@ public class Robot extends TimedRobot {
   public static double StrafeLimit = .25;
   public static double MagicRotateAngle = 2.72;
 
-  private XboxController specialops;
-  private IntakeSubsystem intake;
-  private ShooterSubsystem shooter;
-  private ClimberSubsystem climber;
   private CANSparkMax frontLeftAngleMotor;
   private CANSparkMax frontLeftDriveMotor;
   private CANSparkMax frontRightDriveMotor;
@@ -101,15 +93,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     SmartDashboard.putString("MotorTesting: ", "None");
     drive_control = new XboxController(DRIVER_PORT);
-    intake = new IntakeSubsystem(drive_control, INTAKE_PORT);
     
-    specialops = new XboxController(SPECIAL_OPS_PORT);
-    shooter = new ShooterSubsystem(specialops, SHOOTER_LAUNCH_PORT, SHOOTER_INDEXER_PORT, SHOOTER_SWITCH_PORT);
-    climber = new ClimberSubsystem(specialops, CLIMBER_EXTENDER_PORT, CLIMBER_EXTENDER_SWITCH, CLIMBER_ROTATOR_PORT, CLIMBER_ROTATOR_SWITCH, () -> {
-      shooter.disabledInit();
-      intake.disabledInit();
-    });
-
     frontLeftAngleMotor = new CANSparkMax(FRONT_LEFT_ANGLE_ID, MotorType.kBrushed);
     frontLeftDriveMotor = new CANSparkMax(FRONT_LEFT_DRIVE_ID, MotorType.kBrushless);
     frontRightAngleMotor = new CANSparkMax(FRONT_RIGHT_ANGLE_ID, MotorType.kBrushed);
@@ -239,15 +223,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    if (intake != null) {
-      intake.robotPeriodic();
-    }
-    if (shooter != null) {
-      shooter.robotPeriodic();
-    }
-    if (climber != null) {
-      climber.robotPeriodic();
-    }
     SmartDashboard.putNumber("FL Angle Position", frontLeftAngleEncoder.getPosition());
     SmartDashboard.putNumber("FR Angle Position", frontRightAngleEncoder.getPosition());
     SmartDashboard.putNumber("BR Angle Position", backRightAngleEncoder.getPosition());
@@ -271,19 +246,18 @@ public class Robot extends TimedRobot {
 
     // always clock the start of autonomous mode, and run the climber
     autonomousStart = Timer.getFPGATimestamp();
-    climber.autonomousInit();
 
     Logger.log("starting auto program ", autoMode.getSelected());
 
-    if ("DoubleShooter".equalsIgnoreCase(autoMode.getSelected())) {
-      intake.doubleShooterInit();
-      shooter.doubleShooterInit();
-    } else if ("IntakeOnly".equalsIgnoreCase(autoMode.getSelected())) {
-      intake.singleShooterInit();
-    } else if ("SingleShooter".equalsIgnoreCase(autoMode.getSelected())) {
-      intake.singleShooterInit();
-      shooter.singleShooterInit();
-    }
+  //   if ("DoubleShooter".equalsIgnoreCase(autoMode.getSelected())) {
+  //     intake.doubleShooterInit();
+  //     shooter.doubleShooterInit();
+  //   } else if ("IntakeOnly".equalsIgnoreCase(autoMode.getSelected())) {
+  //     intake.singleShooterInit();
+  //   } else if ("SingleShooter".equalsIgnoreCase(autoMode.getSelected())) {
+  //     intake.singleShooterInit();
+  //     shooter.singleShooterInit();
+  //   }
   }
 
   /** This function is called periodically during autonomous. */
@@ -291,23 +265,23 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
 
     // always run the climber
-    climber.autonomousPeriodic();
+    // climber.autonomousPeriodic();
 
-    double seconds = Timer.getFPGATimestamp() - autonomousStart;
-
-    if ("DoubleShooter".equalsIgnoreCase(autoMode.getSelected())) {
-      intake.doubleShooterPeriodic(seconds);
-      shooter.doubleShooterPeriodic(seconds);
-      doubleShooterPeriodic(seconds);
-    } else if ("IntakeOnly".equalsIgnoreCase(autoMode.getSelected())) {
-      intake.doubleShooterPeriodic(seconds);
-    } else if ("SingleShooter".equalsIgnoreCase(autoMode.getSelected())) {
-      intake.singleShooterPeriodic(seconds);
-      shooter.singleShooterPeriodic(seconds);
-      singleShooterPeriodic(seconds);
-    }
+    // double seconds = Timer.getFPGATimestamp() - autonomousStart;
+    // if ("DoubleShooter".equalsIgnoreCase(autoMode.getSelected())) {
+    //   intake.doubleShooterPeriodic(seconds);
+    //   shooter.doubleShooterPeriodic(seconds);
+    //   doubleShooterPeriodic(seconds);
+    // } else if ("IntakeOnly".equalsIgnoreCase(autoMode.getSelected())) {
+    //   intake.doubleShooterPeriodic(seconds);
+    // } else if ("SingleShooter".equalsIgnoreCase(autoMode.getSelected())) {
+    //   intake.singleShooterPeriodic(seconds);
+    //   shooter.singleShooterPeriodic(seconds);
+    //   singleShooterPeriodic(seconds);
+    // }
   }
 
+  @SuppressWarnings("unused")
   private void singleShooterPeriodic(double seconds) {
     if (seconds < 0.2) {   // let the intake wheel wind up a bit
       forwardBy(0.0, 0.0);
@@ -324,6 +298,7 @@ public class Robot extends TimedRobot {
     }
   }
 
+  @SuppressWarnings("unused")
   private void doubleShooterPeriodic(double seconds) {
     if (seconds < 0.3) {   // let the intake wheel wind up a bit
       forwardBy(0.0, 0.0);
@@ -366,9 +341,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     teleopRounds = 0L;
-    shooter.teleopInit();
-    intake.teleopInit();
-    climber.teleopInit();
   }
 
   @Override
@@ -380,15 +352,6 @@ public class Robot extends TimedRobot {
     //LOGGING TO SD ~ NOT NEEDED
     SmartDashboard.putNumber("Front Left Swerve Wheel Output", frontLeftDriveMotor.get());
     SmartDashboard.putNumber("Back Left Swerve Wheel Output", backLeftDriveMotor.get());
-    if (intake != null) {
-      intake.telopPeriodic();
-    }
-    if (shooter != null) {
-      shooter.teleopPeriodic();      
-    }
-    if (climber != null) {
-      climber.teleopPeriodic();
-    }
 
     double rightX = drive_control.getRightX();
     double leftX = drive_control.getLeftX();
@@ -523,15 +486,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    if (intake != null) {
-      intake.disabledInit();
-    }
-    if (shooter != null) {
-      shooter.disabledInit();
-    }
-    if (climber != null) {
-      climber.disabledInit();
-    }
+   
   }
 
 /* ==============================================================================
@@ -578,7 +533,7 @@ public class Robot extends TimedRobot {
     double ff = SmartDashboard.getNumber("Feed Forward", 0);
     double max = SmartDashboard.getNumber("Max Output", 0);
     double min = SmartDashboard.getNumber("Min Output", 0);
-    double rotations = SmartDashboard.getNumber("Set Rotations", 0);
+
     if((p != kP)) { frontLeftPidController.setP(p); kP = p; }
     if((i != kI)) { frontLeftPidController.setI(i); kI = i; }
     if((d != kD)) { frontLeftPidController.setD(d); kD = d; }
