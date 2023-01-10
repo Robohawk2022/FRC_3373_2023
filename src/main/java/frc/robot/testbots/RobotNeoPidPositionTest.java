@@ -1,4 +1,4 @@
-package frc.robot.examples;
+package frc.robot.testbots;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
