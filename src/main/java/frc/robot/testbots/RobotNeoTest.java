@@ -40,7 +40,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotNeoTest extends TimedRobot {
 
     // CHANGE ME to the appropriate ID based on the testbench config
-    public static final int MOTOR_CANID = 0;
+    public static final int MOTOR_CANID = 1;
 
     // CHANGE ME to the appropriate port based on the laptop config
     public static final int CONTROLLER_PORT = 0;
@@ -64,7 +64,7 @@ public class RobotNeoTest extends TimedRobot {
 
         // this is how you invert the motor output - reversing the notion of 
         // "forward" and "reverse" to accomodate how it's mounted on the robot
-        motor.setInverted(false);
+        // motor.setInverted(false);
         // motor.setInverted(true);
 
         // this will set the "neutral mode" - what should the motor do when
@@ -80,7 +80,7 @@ public class RobotNeoTest extends TimedRobot {
 
         // this is how you tell the encoder to invert the data it gets
         // from the motor.
-        encoder.setInverted(false);
+        // encoder.setInverted(false);
         // encoder.setInverted(true);
 
         // by default the encoder reports position as "number of rotations".

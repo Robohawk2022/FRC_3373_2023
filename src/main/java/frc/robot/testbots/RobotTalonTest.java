@@ -53,6 +53,7 @@ public class RobotTalonTest extends TimedRobot {
 
     private XboxController controller;
     private TalonFX talon;
+    private double speed;
 
     @Override
     public void robotInit() {
@@ -93,6 +94,7 @@ public class RobotTalonTest extends TimedRobot {
         // the motor shaft (how fast it's spinning). talon measures this in
         // "units" per 100ms period. we convert this to RPM.
         SmartDashboard.putNumber("Motor Velocity", VELOCITY_CONVERSION * talon.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("desiredSpeed", speed);
 
     }
 
@@ -100,8 +102,8 @@ public class RobotTalonTest extends TimedRobot {
     public void teleopPeriodic() {
 
         // gets a speed factor that ranges from -1.0 to 1.0
-        double speed = controller.getLeftY();
-
+        speed = controller.getLeftY();
+        System.out.println(speed);
         // applies a "deadband" - sometimes controllers will report a small joystick
         // value even if you aren't pushing them. this will filter that out.
         speed = MathUtil.applyDeadband(speed, 0.1);
@@ -109,11 +111,12 @@ public class RobotTalonTest extends TimedRobot {
         // square the input value - this makes small values smaller, which gives you
         // finer-grained control at slow speed. note that we want to preserve the
         // sign (positive or negative) of the original value.
-        speed = Math.abs(speed) * speed;
+        speed = Math.abs(speed) * speed * 0.4;
 
         // this is one of multiple ways to tell the motor how fast to run; you are
         // giving it a percentage (from -1.0 to 1.0) of maximum output to apply
-        talon.set(ControlMode.PercentOutput, speed);
+        
+         talon.set(ControlMode.PercentOutput, speed);
 
     }
     
