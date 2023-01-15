@@ -1,6 +1,9 @@
 package frc.robot.testbots;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -22,11 +25,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RobotTalonPidVelocityTest extends TimedRobot {
     
     // CHANGE ME to the appropriate ID based on the testbench config
-    public static final int MOTOR_CANID = 0;
+    public static final int MOTOR_CANID = 10;
 
     public static final double UNITS_PER_ROTATION = 2048.0;
 
-    public static final double VEL_CONVERSION = 600.0 / 2048.0;
+    // public static final double VEL_CONVERSION = 600.0 / 2048.0;
+    public static final double VEL_CONVERSION = Math.PI * 40 / 2048;
 
     private TalonFX talon;
     private double kP;
@@ -35,13 +39,17 @@ public class RobotTalonPidVelocityTest extends TimedRobot {
     private double kIZ;
     private double kF;
     private double maxOutput;
-    private double rpm = 0.0;
+    private double ips = 0.0;
 
     @Override
     public void robotInit() {
 
         talon = new TalonFX(MOTOR_CANID);
-        // TODO - wrapping?
+        talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        talon.configSoftLimitDisableNeutralOnLOS(false, 0);
+        talon.setInverted(InvertType.None);
+        talon.setNeutralMode(NeutralMode.Coast);
+        talon.configClosedloopRamp(0.3);
 
         // magic defaults from vendor example code - this is what we're tuning
         setP(0.1);
@@ -59,8 +67,8 @@ public class RobotTalonPidVelocityTest extends TimedRobot {
             builder.addDoubleProperty("kD", () -> kD, this::setD);
             builder.addDoubleProperty("kF", () -> kF, this::setF);
             builder.addDoubleProperty("Max Output", () -> maxOutput, this::setMaxOutput); 
-            builder.addDoubleProperty("RPM - Actual", () -> talon.getSelectedSensorVelocity() * VEL_CONVERSION, null);
-            builder.addDoubleProperty("RPM - Requested", () -> rpm, val -> rpm = val);
+            builder.addDoubleProperty("IPS - Actual", () -> talon.getSelectedSensorVelocity() * VEL_CONVERSION, null);
+            builder.addDoubleProperty("IPS - Requested", () -> ips, val -> ips = val);
             builder.addDoubleProperty("Velocity", talon::getSelectedSensorVelocity, null);
         });
     }
@@ -98,7 +106,7 @@ public class RobotTalonPidVelocityTest extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        double units = rpm / VEL_CONVERSION;
+        double units = ips / VEL_CONVERSION;
         talon.set(ControlMode.Velocity, units);
     }
 }

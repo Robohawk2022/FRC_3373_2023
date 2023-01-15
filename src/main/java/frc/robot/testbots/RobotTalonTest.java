@@ -1,6 +1,7 @@
 package frc.robot.testbots;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -49,7 +50,7 @@ public class RobotTalonTest extends TimedRobot {
 
     public static final double POSITION_CONVERSION = 1.0;
 
-    public static final double VELOCITY_CONVERSION = 1.0;
+    public static final double VELOCITY_CONVERSION = Math.PI * 40 / 2048;
 
     private XboxController controller;
     private TalonFX talon;
@@ -63,7 +64,8 @@ public class RobotTalonTest extends TimedRobot {
         // this is how you create the object which connects to the talon motor
         // control on the falcon robot
         talon = new TalonFX(MOTOR_CANID);
-
+        talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        talon.configSoftLimitDisableNeutralOnLOS(false, 0);
         // this is how you invert the motor output - reversing the notion of 
         // "forward" and "reverse" to accomodate how it's mounted on the robot
         talon.setInverted(InvertType.None);

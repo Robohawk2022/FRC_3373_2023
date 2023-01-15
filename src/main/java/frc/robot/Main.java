@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.testbots.RobotNeoTest;
+import frc.robot.testbots.RobotTalonPidVelocityTest;
 import frc.robot.testbots.RobotTalonTest;
 
 
@@ -25,7 +26,7 @@ public final class Main {
    */
   public static void main(String... args) {
     System.err.println("starting robot ...");
-   RobotBase.startRobot(RobotTalonTest::new);
+   RobotBase.startRobot(RobotTalonPidVelocityTest::new);
     //RobotBase.startRobot(RobotEyesOnly::new);
     //RobotBase.startRobot(RobotShooterOnly::new);
      // RobotBase.startRobot(RobotIntakeOnly::new);
