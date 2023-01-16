@@ -38,20 +38,20 @@ public class SwerveConfig {
     // CANID assignments and mounting positions for motors
     // TODO update with correct assignments for our build
 
-    public static final int FL_DRIVE_CANID = 0;
-    public static final int FL_TURN_CANID = 0;
+    public static final int FL_DRIVE_CANID = 10;
+    public static final int FL_TURN_CANID = 11;
     public static final boolean FL_REVERSE = false;
 
-    public static final int FR_DRIVE_CANID = 0;
-    public static final int FR_TURN_CANID = 0;
+    public static final int FR_DRIVE_CANID = 13;
+    public static final int FR_TURN_CANID = 14;
     public static final boolean FR_REVERSE = false;
 
-    public static final int BL_DRIVE_CANID = 0;
-    public static final int BL_TURN_CANID = 0;
+    public static final int BL_DRIVE_CANID = 16;
+    public static final int BL_TURN_CANID = 17;
     public static final boolean BL_REVERSE = false;
     
-    public static final int BR_DRIVE_CANID = 0;
-    public static final int BR_TURN_CANID = 0;
+    public static final int BR_DRIVE_CANID = 19;
+    public static final int BR_TURN_CANID = 20;
     public static final boolean BR_REVERSE = false;
 
     // helper function
