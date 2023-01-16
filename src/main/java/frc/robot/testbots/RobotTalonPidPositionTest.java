@@ -1,8 +1,12 @@
 package frc.robot.testbots;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -23,11 +27,15 @@ public class RobotTalonPidPositionTest extends TimedRobot {
     
     // CHANGE ME to the appropriate ID based on the testbench config
     public static final int MOTOR_CANID = 0;
+    public static final int ENCODER_CANID = 0;
 
-    public static final double UNITS_PER_ROTATION = 2048.0;
+    // I think this is correct, based on the special encoder we're using
+    public static final double UNITS_PER_ROTATION = 4096.0;
 
-    public static final double POS_CONVERSION = 360.0 / 2048.0;
+    // We need a number we can multiple by "ticks" to get "degrees"
+    public static final double POS_CONVERSION = 1.0;
 
+    private CANCoder encoder;
     private TalonFX talon;
     private double kP;
     private double kI;
@@ -38,8 +46,15 @@ public class RobotTalonPidPositionTest extends TimedRobot {
     @Override
     public void robotInit() {
 
+        encoder = new CANCoder(ENCODER_CANID);
+
         talon = new TalonFX(MOTOR_CANID);
-        // TODO - wrapping?
+        talon.configRemoteFeedbackFilter(encoder, 0);
+        talon.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
+        talon.configSoftLimitDisableNeutralOnLOS(false, 0);
+        talon.setInverted(InvertType.None);
+        talon.setNeutralMode(NeutralMode.Coast);
+        talon.configClosedloopRamp(0.3);
 
         // magic defaults from vendor example code - this is what we're tuning
         setP(0.15);
