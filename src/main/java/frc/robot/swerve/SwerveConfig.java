@@ -1,6 +1,10 @@
 package frc.robot.swerve;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -55,6 +59,47 @@ public class SwerveConfig {
     public static final boolean BR_REVERSE = false;
 
     // helper function
+
+
+
+
+
+
+    ///////////////////////////////////////////// UNDERCONSTRUCTION
+
+
+
+
+    //The createDriveMotor method 
+
+    public static void createDriveMotor(int canld, boolean reverseMotor){
+
+        TalonFX DriveMotor = new TalonFX(canld);
+        {
+          DriveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+          DriveMotor.configSoftLimitDisableNeutralOnLOS(true, canld);
+          DriveMotor.setInverted(InvertType.None);
+          DriveMotor.setNeutralMode(NeutralMode.Brake);
+          DriveMotor.configClosedloopRamp(0.3);
+          DriveMotor.config_kP(0, 0.1);
+          DriveMotor.config_kI(0, 0.001);
+          DriveMotor.config_kD(0, 5.0);
+          DriveMotor.config_kF(0, 1023.0 / 20660.0);
+          DriveMotor.config_IntegralZone(0, 300.0);
+          DriveMotor.configMaxIntegralAccumulator(0, 1.0);
+        }
+  
+    }
+    
+
+    /////////////////////////////////////////////// UNDERCONSTRUCTION
+
+
+
+
+
+
+
 
     public static Translation2d [] calculateWheelPositions() {
 
