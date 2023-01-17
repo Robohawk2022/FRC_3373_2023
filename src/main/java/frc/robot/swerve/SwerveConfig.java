@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -22,14 +21,6 @@ public class SwerveConfig {
     // behavior configuration for driving
 
     public static final double DEFAULT_MAX_DRIVE_SPEED_FPS = 2.5;
-
-    // low-level configuration for drive motors
-    // TODO replace PID parameters with ones tuned for our build
-
-    public static final NeutralMode DEFAULT_DRIVE_NEUTRAL_MODE = NeutralMode.Brake;
-    public static final double DEFAULT_DRIVE_RAMP_RATE = 0.3;
-    public static final PIDConstant DRIVE_PID = new PIDConstant(
-        0.1, 0.01, 5.0, 1023.0 / 20660.0, 300.0, -1.0, 1.0);
 
     // low-level configuration for turn motors
     // TODO replace PID parameters with ones tuned for our build
@@ -58,48 +49,32 @@ public class SwerveConfig {
     public static final int BR_TURN_CANID = 20;
     public static final boolean BR_REVERSE = false;
 
-    // helper function
-
-
-
-
-
-
-    ///////////////////////////////////////////// UNDERCONSTRUCTION
-
-
-
-
-    //The createDriveMotor method 
-
-    public static void createDriveMotor(int canld, boolean reverseMotor){
-
-        TalonFX DriveMotor = new TalonFX(canld);
-        {
-          DriveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-          DriveMotor.configSoftLimitDisableNeutralOnLOS(true, canld);
-          DriveMotor.setInverted(InvertType.None);
-          DriveMotor.setNeutralMode(NeutralMode.Brake);
-          DriveMotor.configClosedloopRamp(0.3);
-          DriveMotor.config_kP(0, 0.1);
-          DriveMotor.config_kI(0, 0.001);
-          DriveMotor.config_kD(0, 5.0);
-          DriveMotor.config_kF(0, 1023.0 / 20660.0);
-          DriveMotor.config_IntegralZone(0, 300.0);
-          DriveMotor.configMaxIntegralAccumulator(0, 1.0);
+    /**
+     * Creates a drive motor for the swerve drive. Drive motors are used with
+     * velocity-based PID control.
+     */
+    public static TalonFX createDriveMotor(int canId, boolean reverseMotor){
+        TalonFX driveMotor = new TalonFX(canId);
+        driveMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+        driveMotor.configSoftLimitDisableNeutralOnLOS(true, canId);
+        if (reverseMotor) {
+            driveMotor.setInverted(InvertType.None);
+        } else {
+            driveMotor.setInverted(InvertType.InvertMotorOutput);
         }
-  
+        driveMotor.setNeutralMode(NeutralMode.Brake);
+        driveMotor.configClosedloopRamp(0.3);
+        driveMotor.config_kP(0, 0.1);
+        driveMotor.config_kI(0, 0.001);
+        driveMotor.config_kD(0, 5.0);
+        driveMotor.config_kF(0, 1023.0 / 20660.0);
+        driveMotor.config_IntegralZone(0, 300.0);
+        driveMotor.configPeakOutputForward(1.0);
+        driveMotor.configPeakOutputReverse(-1.0);
+        driveMotor.configClosedloopRamp(0.3);
+        driveMotor.configOpenloopRamp(0.3);
+        return driveMotor;
     }
-    
-
-    /////////////////////////////////////////////// UNDERCONSTRUCTION
-
-
-
-
-
-
-
 
     public static Translation2d [] calculateWheelPositions() {
 

@@ -46,11 +46,7 @@ public class SwerveWheel {
         this.currentState = new SwerveModuleState();
         this.desiredState = currentState;
 
-        this.driveMotor = new TalonFX(drivePort);
-        this.driveMotor.setNeutralMode(SwerveConfig.DEFAULT_DRIVE_NEUTRAL_MODE);
-        this.driveMotor.setInverted(inverted ? InvertType.InvertMotorOutput : InvertType.None);
-        this.driveMotor.configClosedloopRamp(SwerveConfig.DEFAULT_DRIVE_RAMP_RATE);
-        SwerveConfig.DRIVE_PID.configPID(driveMotor);
+        this.driveMotor = SwerveConfig.createDriveMotor(drivePort, inverted);
 
         this.turnMotor = new TalonFX(turnPort);
         this.turnMotor.setNeutralMode(SwerveConfig.DEFAULT_TURN_NEUTRAL_MODE);

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -72,8 +73,8 @@ public class MacDrive {
 
     driveMotors = Arrays.asList(frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive);
     for (int i=0; i<driveMotors.size(); i++) {
-      driveMotors.get(i).configOpenloopRamp(SwerveConfig.DEFAULT_DRIVE_RAMP_RATE);
-      driveMotors.get(i).setNeutralMode(SwerveConfig.DEFAULT_DRIVE_NEUTRAL_MODE);
+      driveMotors.get(i).configOpenloopRamp(0.3);
+      driveMotors.get(i).setNeutralMode(NeutralMode.Brake);
     }
 
     frontLeftTurn = new TalonFX(SwerveConfig.FL_TURN_CANID);
