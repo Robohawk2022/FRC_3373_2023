@@ -35,18 +35,22 @@ public class SwerveConfig {
 
     public static final int FL_DRIVE_CANID = 10;
     public static final int FL_TURN_CANID = 11;
+    public static final int FL_ENCODER_CANID = 12;
     public static final boolean FL_REVERSE = false;
 
     public static final int FR_DRIVE_CANID = 13;
     public static final int FR_TURN_CANID = 14;
+    public static final int FR_ENCODER_CANID = 15;
     public static final boolean FR_REVERSE = false;
 
     public static final int BL_DRIVE_CANID = 16;
     public static final int BL_TURN_CANID = 17;
+    public static final int BL_ENCODER_CANID = 18;
     public static final boolean BL_REVERSE = false;
     
     public static final int BR_DRIVE_CANID = 19;
     public static final int BR_TURN_CANID = 20;
+    public static final int BR_ENCODER_CANID =21;
     public static final boolean BR_REVERSE = false;
 
     /**
