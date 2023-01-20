@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -76,6 +77,28 @@ public class SwerveConfig {
         return driveMotor;
     }
 
+    public static TalonFX createTurnMotor(int motorCanID, int encoderCanID) {
+        CANCoder encoderCanId = new CANCoder(encoderCanID);
+        TalonFX turnMotor = new TalonFX(motorCanID);
+        // I dont know what to do for this one so I just put what VS code recomeded.
+    
+        turnMotor.configRemoteFeedbackFilter(turnMotor, encoderCanID);
+        
+        turnMotor.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
+        turnMotor.configSoftLimitDisableNeutralOnLOS(true, encoderCanID);
+        turnMotor.setInverted(InvertType.None);
+        turnMotor.setNeutralMode(NeutralMode.Brake);
+        turnMotor.configClosedloopRamp(0.3);
+        // I don't know to values for theis
+        turnMotor.config_kP(0, 0.15);
+        turnMotor.config_kI(0, 0.00);
+        turnMotor.config_kD(0, 1.0);
+        turnMotor.config_IntegralZone(motorCanID, encoderCanID);
+        turnMotor.configPeakOutputReverse(0.0);
+        turnMotor.configPeakOutputForward(0.0);
+        return turnMotor;
+    }
+    
     public static Translation2d [] calculateWheelPositions() {
 
         double lm = Units.inchesToMeters(WHEEL_BASE_INCHES) / 2.0;
