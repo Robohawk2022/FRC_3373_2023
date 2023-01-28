@@ -26,7 +26,7 @@ public final class Main {
    */
   public static void main(String... args) {
     System.err.println("starting robot ...");
-   RobotBase.startRobot(RobotTalonTest::new);
+   RobotBase.startRobot(Pneumatics::new);
             //  RobotTalonTest
             //  RobotTalonPidVelocityTest
     //RobotBase.startRobot(RobotEyesOnly::new);
